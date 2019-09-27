@@ -1,24 +1,32 @@
 import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+import './App.scss'
+import { StateProvider, UserState, ListState, GlobalState } from './store/state'
+import reducer from './store/reducer'
+import Toolbar from './components/Toolbar'
+import Login from './components/Login'
+import Posts from './pages/Posts'
+import { Route, Switch } from 'react-router-dom'
+import Albums from './pages/Albums'
+import Todos from './pages/Todos'
 
-function App () {
+const App = () => {
+  const state = {
+    userState: UserState,
+    globalState: GlobalState,
+    ...ListState
+  }
+
   return (
     <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.js</code> and save to reload it.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
+      <StateProvider initialState={state} reducer={reducer}>
+        <Toolbar />
+        <Switch>
+          <Route exact path='/' component={Login} />
+          <Route exact path='/posts' component={Posts} />
+          <Route exact path='/albums' component={Albums} />
+          <Route exact path='/todos' component={Todos} />
+        </Switch>
+      </StateProvider>
     </div>
   )
 }
